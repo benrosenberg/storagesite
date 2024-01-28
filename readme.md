@@ -39,4 +39,5 @@ python3 -m pip install python-djvulibre flask numpy PyPDF2 pdf2image
 additional requirements:
 
  - nodejs and katex are used for rendering captchas
- - a discord webhook (logic excluded via gitignore) is used to send a notification every time a captcha is generated - pandas and matplotlib are used to generate some nice graphics and stats about site visitors
+ - a discord webhook (logic excluded via gitignore) is used to send a notification every time a captcha is generated
+ - pandas and matplotlib are used to generate some nice graphics and stats about site visitors
