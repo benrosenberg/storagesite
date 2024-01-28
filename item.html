@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+	<head>
+		<title>{sitename}</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="static/css/item.css" type="text/css">
+		<link rel="apple-touch-icon" sizes="180x180" href="static/favicons/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="static/favicons/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="static/favicons/favicon-16x16.png">
+		<link rel="manifest" href="static/favicons/site.webmanifest">
+		<link rel="mask-icon" href="static/favicons/safari-pinned-tab.svg" color="#5bbad5">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="theme-color" content="#ffffff">
+	</head>
+
+	<body>
+
+		<div class="container">
+			<img src="{coverpath}" style="margin: 2%">
+
+			<table>
+				<tr>
+					<td>
+						Title
+					</td>
+					<td>
+						<span class="attr">{title}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Author
+					</td>
+					<td>
+						<span class="attr">{author}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Publication date
+					</td>
+					<td>
+						<span class="attr">{pubdate}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Upload date
+					</td>
+					<td>
+						<span class="attr">{uploaddate}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Source link
+					</td>
+					<td>
+						<span class="attr">{sourcelink}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Number of pages
+					</td>
+					<td>
+						<span class="attr">{numpages}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						File size
+					</td>
+					<td>
+						<span class="attr">{filesize}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						File type
+					</td>
+					<td>
+						<span class="attr">{filetype}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						MD5
+					</td>
+					<td>
+						<span class="attr">{md5}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						SHA1
+					</td>
+					<td>
+						<span class="attr">{sha1}</span>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						SHA256
+					</td>
+					<td>
+						<span class="attr">{sha256}</span>
+					</td>
+				</tr>
+			</table>
+
+			
+
+		</div>
+
+		<form method="POST">
+			<input style="display:none" value="{id}" id="id" name="id">
+			<button>Click to download file</button>
+		</form>
+
+	</body>
+
+	<p class="footer">
+		<a href="/">Search</a>
+		<a href="/add">Upload</a>
+		<a href="/about">About</a>
+	</p>
+
+</html>

@@ -1,0 +1,122 @@
+body {
+	margin: 2%;
+	font-family: sans-serif;
+	font-size: 16pt;
+    background-color:#eee;
+    background-image: linear-gradient(30deg, #fff 12%, transparent 12.5%, transparent 87%, #fff 87.5%, #fff),
+    linear-gradient(150deg, #fff 12%, transparent 12.5%, transparent 87%, #fff 87.5%, #fff),
+    linear-gradient(30deg, #fff 12%, transparent 12.5%, transparent 87%, #fff 87.5%, #fff),
+    linear-gradient(150deg, #fff 12%, transparent 12.5%, transparent 87%, #fff 87.5%, #fff),
+    linear-gradient(60deg, #f9f9f9 25%, transparent 25.5%, transparent 75%, #f9f9f9 75%, #f9f9f9),
+    linear-gradient(60deg, #f9f9f9 25%, transparent 25.5%, transparent 75%, #f9f9f9 75%, #f9f9f9);
+    background-size:80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+    margin: 0px;
+	margin-bottom: 150px;
+}
+
+.searchdiv {
+	margin-left: 50%;
+	width: 30%;
+	padding: 20px;
+}
+
+.searchwrapper {
+	margin-left: -165px;
+}
+
+.searchbar {
+	width: 200px;
+	display: inline-block;
+	border: solid 1px black;
+}
+
+.searchbutton {
+	width: 80px;
+	display: inline-block;
+	border: solid 1px #ccc;
+}
+
+.searchbutton:hover {
+	background: #ccc;
+}
+
+.results {
+	display: grid;
+	grid-template-columns: auto auto auto auto auto;
+	padding-left: 10%;
+	padding-right: 10%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-size: 14pt;
+}
+
+.result img {
+	width: 160px;
+	height: 200px;
+	margin-bottom: -10px;
+	border: 2px solid #000;
+}
+
+@media screen and (max-width: 1400px) {
+	.results {
+		grid-template-columns: auto auto auto auto;
+		padding-left: 0%;
+		padding-right: 0%;
+	}
+	img {
+		width: 160px;
+		height: 200px;
+	}
+}
+
+@media screen and (max-width: 1200px) {
+	.results {
+		grid-template-columns: auto auto auto;
+		padding-left: 0%;
+		padding-right: 0%;
+	}
+	img {
+		width: 160px;
+		height: 200px;
+	}
+}
+
+
+@media screen and (max-width: 700px) {
+	.results {
+		grid-template-columns: auto auto;
+		padding-left: 0%;
+		padding-right: 0%;
+	}
+	img {
+		width: 160px;
+		height: 200px;
+	}
+}
+
+
+.result {
+	text-align: center;
+	/* border: solid 1px blue; */
+	padding: 10px;
+	width: 200px;
+}
+
+.number-of-results {
+	text-align: center;
+}
+
+.footer {
+    text-align: center;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0%;
+    position: fixed;
+    bottom: 0;
+    background-color: #f9f9f9;
+    border-top: 2px solid #818181;
+    display: flex;
+    justify-content: space-around;
+}

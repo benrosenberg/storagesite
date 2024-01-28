@@ -1,0 +1,270 @@
+<!-- frontend to tag searcher -->
+
+<!DOCTYPE html>
+
+	<head>
+		<title><<SITENAME>></title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"/> 
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="static/css/add.css" type="text/css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn" crossorigin="anonymous">
+        <link rel="apple-touch-icon" sizes="180x180" href="static/favicons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="static/favicons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="static/favicons/favicon-16x16.png">
+        <link rel="manifest" href="static/favicons/site.webmanifest">
+        <link rel="mask-icon" href="static/favicons/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <script>
+            function check_required_fields() {
+                const required_fields = Array.from(document.getElementsByClassName('required-field'));
+                var entered = required_fields.map(field => field.value.trim());
+                if (entered.every((entry) => entry.length > 0)) {
+                    document.getElementById("required-field-notice").style.display = 'none';
+                    required_fields.forEach(field => {
+                        field.style.border = "solid 2px #ccc";
+                    });
+                    return true;
+                }
+                else {
+                    required_fields.forEach(field => {
+                        if (field.value.trim().length == 0) {
+                            field.style.border = "solid 2px red";
+                            console.log('empty field: ' + field.name);
+                        } else {
+                            field.style.border = "solid 2px #ccc";
+                        }
+                    });
+                    document.getElementById("required-field-notice").style.display = 'block';
+                    return false;
+                }
+            }
+
+            function check_required_file() {
+                var filename = document.getElementById('fileinput').value.trim();
+                var ext = filename.split(/(\\|\/)/g).pop(); // '/path/to/file.ext' => 'file.ext'
+                var reminder = document.getElementById('required-file-notice')
+                if (filename.length == 0) {
+                    reminder.textContent = "Please upload a file.";
+                    reminder.style.display = 'block';
+                    return false;
+                } else if (!(filename.includes('.'))) {
+                    reminder.textContent = "Uploaded files must have an extension in their filename.";
+                    reminder.style.display = 'block';
+                    return false;
+                } else {
+                    var ext = filename.split('.').pop();
+                    // var ALLOWED_EXTS = ['pdf', 'tex', 'djvu', 'txt', 'md', 'epub'];
+                    var ALLOWED_EXTS = ['pdf', 'tex', 'txt', 'md', 'epub'];
+                    ALLOWED_EXTS.sort();
+                    if (!(ALLOWED_EXTS.includes(ext))) {
+                        var forbiddenString = "Forbidden file extension \"." + ext + "\".";
+                        var allowedString = "Allowed extensions: " + ALLOWED_EXTS.join(', ') + '.';
+                        reminder.innerHTML = forbiddenString + '<br>' + allowedString;
+                        reminder.style.display = 'block';
+                        return false;
+                    } else {
+                        reminder.style.display = 'none';
+                        return true;
+                    }
+                }
+            }
+
+            function check_source_link() {
+                var link = document.getElementById('sourcelinkinput');
+                var linktext = link.value.trim();
+                var valid_notice = document.getElementById('valid-link-notice');
+                if (linktext.length == 0) {
+                    valid_notice.style.display = 'none';
+                    link.style.border = "solid 2px #ccc";
+                    return true;
+                } else {
+                    // Copyright (c) 2010-2013 Diego Perini, MIT licensed
+                    // https://gist.github.com/dperini/729294
+                    // see also https://mathiasbynens.be/demo/url-regex
+                    // modified to allow protocol-relative URLs
+                    var isValidURL = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(linktext);
+                    if (isValidURL) {
+                        valid_notice.style.display = 'none';
+                        link.style.border = "solid 2px #ccc";
+                        return true;
+                    } else {
+                        valid_notice.style.display = 'block';
+                        link.style.border = "solid 2px red";
+                        return false;
+                    }
+                }
+            }
+
+            function isInteger(value) {
+                return /^-?\s?\d+$/.test(value);
+            }
+
+            function check_captcha() {
+                var captcha_input = document.getElementById('captcha-answer');
+                var answer = captcha_input.value.trim();
+                var captcha_notice = document.getElementById('required-captcha-notice');
+                if (answer.length == 0 || !(isInteger(answer))) {
+                    captcha_notice.style.color = 'red';
+                    return false;
+                } else {
+                    captcha_notice.style.color = 'black';
+                    return true;
+                }
+            }
+
+            function display_tags() {
+                var tags = document.getElementById('taginput').value.trim();
+                if (tags.length == 0) {
+                    document.getElementById('tag-display').style.visibility = 'hidden';
+                } else {
+                    tags = [...new Set(tags.split(/\s+/))];
+                    tags.sort();
+                    var spanString = '<span class="tag">'
+                    var tagstring = spanString + tags.join('</span> ' + spanString) + '</span>';
+                    document.getElementById('tag-display').innerHTML = tagstring;
+                    document.getElementById('tag-display').style.visibility = 'visible';
+                }
+                return true;
+            }
+        
+            function run_all_checks_and_submit() {
+                var all_checks = [
+                    check_required_file, 
+                    check_required_fields, 
+                    check_source_link, 
+                    check_captcha,
+                    display_tags
+                ];
+                var all_checks_passed = true;
+                all_checks.forEach(function(check) {
+                    if (!check()) {
+                        console.log('check failed: ' + check.name);
+                        all_checks_passed = false;
+                    } else {
+                        console.log('check passed: ' + check.name);
+                    }
+                });
+                var submitbutton = document.getElementById('submit-button');
+                if (all_checks_passed) {
+                    submitbutton.click();
+                } else {
+                    console.log('failed to submit')
+                }
+            }
+        </script>
+	</head>
+	
+	<body>
+        <div>
+            <h1 style="text-align: center;">Upload a file</h1>
+            
+            <div class="add-form">
+
+                <h3>JS is required to upload files. If you have JS turned off, this isn't gonna work.</h3>
+                <p>Captcha render time: <<PAGE_LOAD_TIME>></p>
+
+                <form method="post" action="" enctype="multipart/form-data" autocomplete="off">
+                    <table>
+                        <tr> 
+                            <td>
+                                <span style="color: red">*</span> Title:
+                                <br>
+                                <input class="required-field" id="titleinput" type="text" placeholder="title..." name="title">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color: red">*</span> Author:
+                                <br>
+                                <input class="required-field" id="authorinput" type="text" placeholder="author..." name="author">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color: red">*</span> Publication date:
+                                <br>
+                                <input class="required-field" id="pubdateinput" type="text" placeholder="publication date..." name="pubdate">
+                            </td>
+                          </tr>
+                        <tr>
+                            <td>
+                                Source link:
+                                <br>
+                                <input id="sourcelinkinput" type="text" placeholder="source link..." name="sourcelink">
+                                <br>
+                                <div style="padding-top: 5px;">
+                                    <span class="valid-link-notice" id="valid-link-notice">
+                                        Provided source link is invalid.
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Tags:
+                                <br>
+                                <input id="taginput" type="text" placeholder="space-separated tags..." name="tags" onkeyup="display_tags()">
+                                <br>
+                                <div style="padding-top: 5px;">
+                                    <span class="tag-display" id="tag-display">
+                                        no tags
+                                    </span>
+                                </div>
+                                <div>
+                                    <span class="required-field-notice" id="required-field-notice">
+                                        Please fill out the required fields, marked in red.
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <!-- <input type="file" placeholder="Upload a file" id="fileinput" name="uploadedfile" accept=".txt, .tex, .djvu, .pdf, .epub, .md"> -->
+                                <input type="file" placeholder="Upload a file" id="fileinput" name="uploadedfile" accept=".txt, .tex, .pdf, .epub, .md">
+                                <br>
+                                <div>
+                                    <span class="file-size-notice">Max file size: <<MAX_FILE_SIZE>></span>
+                                    <span class="required-file-notice" id="required-file-notice">
+                                        Please upload a file.
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span>Your captcha image is below. If the question is too hard, refresh to get a new one.</span>
+                                <br><br>
+				<!-- <img src="data:image/png;base64, [<[<CAPTCHA_IMAGE>]>]"> -->
+				<<CAPTCHA_HTML>>
+                                <br><br>
+                                <input type="text" placeholder="enter the answer..." id="captcha-answer" name="captcha-answer">
+                                <br>
+                                <div>
+                                    <span class="required-captcha-notice" id="required-captcha-notice">
+                                        Please answer the question so we know you are human. The answer is an integer.
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <input type="text" id="user-id" name="user-id" value="<<USER_ID>>" style="display: none;">
+                    <br>
+                    <button type="submit" class="submit-button" id="submit-button"></button>
+                </form>
+                <button onclick="run_all_checks_and_submit()">Submit</button>
+            </div>
+        </div>
+
+	</body>
+
+    <p class="footer">
+        <a href="/">Search</a>
+        <a href="/add">Upload</a>
+        <a href="/about">About</a>
+    </p>
+
+    <script>
+        display_tags();
+    </script>
+</html>

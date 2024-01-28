@@ -1,0 +1,16 @@
+eqns.txt
+fonts/
+__pycache__/
+storagesiteenv/
+the.db
+todo.md
+tmp/
+static/files/
+static/images/
+static/leetcode-solutions.json
+node_modules/
+package.json
+package-lock.json
+node_test.js
+discord_webhook_interface.py
+storagesite.sock
