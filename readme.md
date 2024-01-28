@@ -1,3 +1,7 @@
+# storage site
+
+proof-of-concept file upload site with math captchas, using flask, nginx, gunicorn, and s3.
+
 requirements
 -------------
 
@@ -19,6 +23,7 @@ sudo apt install python3 python3-pip texlive-full djview djvulibre-bin libdjvuli
 
 python packages:
 
+ - `boto3`
  - `python-djvulibre`
  - `flask`
  - `numpy`
