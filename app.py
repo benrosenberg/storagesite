@@ -2,6 +2,14 @@
 #   RUN ME WITH `flask run` in the command line (from within same directory)!
 #
 
+import json
+
+# leetcode solutions auth token
+with open('leetcode-credentials.json', 'r') as f:
+    leetcode_credentials = json.loads(f.read())
+
+leetcode_json_file_location = 'static/leetcode-solutions.json'
+
 from flask import Flask, request, redirect, url_for, send_file
 
 VISITOR_LOG_FILENAME = './static/files/visitors.txt'
@@ -389,3 +397,46 @@ def add():
             'SITENAME' : populate_templates.generate_sitename()
         })
 
+def get_leetcode_data():
+    with open(leetcode_json_file_location, 'r') as f:
+        full_dict = json.loads(f.read())
+    return full_dict
+
+# overwrite by default
+def insert_submission(current_data, new_key, new_item):
+    current_data[new_key] = new_item
+    with open(leetcode_json_file_location, 'w') as f:
+        f.write(json.dumps(current_data))
+    return 'Successfully updated submission for key {}.'.format(new_key)
+
+# structure of submission json: { key : { <data> } }
+@app.route('/submit-lc', methods=['POST'])
+def submit_lc():
+    print(request)
+    try:
+        print('submit attempt detected')
+        if request.method == 'POST':
+            if request.headers.get('Authentication'):
+                if request.headers.get('Authentication') == leetcode_credentials['token']:
+                    try:
+                        if request.is_json:
+                            print('[post] <submit leetcode> submitting', request.json)
+                            print(request.json)
+                            current_data = get_leetcode_data()
+                            print('got by current data retrieval')
+                            new_data = request.json
+                            new_key = list(new_data.keys())[0]
+                            new_item = new_data[new_key]
+                            return insert_submission(current_data, new_key, new_item)
+                        else:
+                            return 'Content type is not supported.', 400
+                    except Exception as e:
+                        return 'failed to get json - {}, {}, {}'.format(repr(e), request, repr(request)), 400
+                else:
+                    return 'Authentication failed.', 401
+            else:
+                return 'Missing authentication header.', 401
+        else:
+            return 'Request type not supported.', 400
+    except Exception as e:
+        return 'hit this exception: ' + repr(e) + ' at request ' + str(request)
